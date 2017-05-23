@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="TClock">
+        <!--时钟View的半径-->
+        <attr name="radius" format="dimension"/>
+        <!--大圆颜色、厚度、渲染色、是否显示渲染色-->
+        <attr name="big_circle_color" format="color"/>
+        <attr name="big_circle_solid_width" format="integer"/>
+        <attr name="big_circle_shader" format="color"/>
+        <attr name="big_circle_shader_show" format="boolean"/>
+        <!--小圆颜色、半径、是否显示-->
+        <attr name="small_circle_color" format="color"/>
+        <attr name="small_circle_radius" format="dimension"/>
+        <attr name="small_circle_show" format="boolean"/>
+        <!--圆弧颜色、边缘弧度、是否显示-->
+        <attr name="arc_color" format="color"/>
+        <attr name="arc_radian" format="dimension"/>
+        <attr name="arc_show" format="boolean"/>
+        <!--中间字体大小、颜色、是否显示-->
+        <attr name="center_msg_Size" format="dimension"/>
+        <attr name="center_msg_Color" format="color"/>
+        <attr name="center_msg_show" format="boolean"/>
+        <!--时钟点大小、颜色、被选中时大小、被选中时颜色、相距大圆环距离-->
+        <attr name="point_size" format="dimension"/>
+        <attr name="point_color" format="color"/>
+        <attr name="point_size_choose" format="dimension"/>
+        <attr name="point_color_choose" format="color"/>
+        <attr name="point_distance_of_bigCircle" format="dimension"/>
+        <!--时钟数字大小、颜色、被选中时大小、被选中时颜色、相距时钟点距离-->
+        <attr name="num_size" format="dimension"/>
+        <attr name="num_color" format="color"/>
+        <attr name="num_size_choose" format="dimension"/>
+        <attr name="num_color_choose" format="color"/>
+        <attr name="num_distance_of_point" format="dimension"/>
+    </declare-styleable>
+</resources>
