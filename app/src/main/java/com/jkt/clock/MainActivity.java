@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity implements TClock.ITLockList
     }
 
     @Override
-    public void onTClockTouch(int clockNum) {
+    public void onTClockTouchUp(int clockNum) {
         Toast.makeText(this, clockNum+"", Toast.LENGTH_SHORT).show();
         mTClock.setCenterMsg(clockNum+"点");
     }

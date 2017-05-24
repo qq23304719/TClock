@@ -18,51 +18,58 @@ import android.view.View;
  * 一个12大刻度的时钟圆环,包括各种手势的滑动事件以及点击事件回调
  */
 public class TClock extends View {
+    //不可设置更改
     private Context mContext;
-    private ITLockListener mITLockListener;
-    private String mCenterMsg;
-    private int mChooseUnm=12;
-    private int mAngle;
-    private float oldX;
-    private float oldY;
     private int mCx;
     private int mCy;
-    private float mRadius;
-    private int mShader1;
-    private int mShader2;
-    private boolean mShowBigCircleShader;
+    private float oldX;
+    private float oldY;
+    private int mAngle;
     private Paint mBigCirclePaint;
     private Paint mSmallCirclePaint;
-    private boolean mShowSmallCircle;
     private Paint mPointPaint;
-    private float mWidth;
-    private boolean mShowSmallCircle1;
-    private float mSmallCircleRadius;
-    private int mPointChooseColor;
-    private int mPointColor;
-    private float mPointRadius;
-    private float mPointchooseRadiusSize;
-    private boolean mShowPoint;
-    private Paint mPoint1CirclePaint;
-    private int mSmallCircleColor;
-    private float mBigCircleWidth;
-    private int mBigCircleColor;
-    private int mArcColor;
-    private float mArcWidth;
-    private boolean mShowArc;
-    private float mPointRatio;
-    private float mNumSize;
-    private int mNumColor;
-    private int mNumChooseColor;
-    private float mNumRatio;
-    private float mMsgSize;
-    private int mMsgColor;
-    private boolean mShowMsg;
     private Paint mArcPaint;
     private Paint mNumPaint;
     private Paint mMsgPaint;
-    private float mNumChooseSize;
+    //可设置(主选项)
+    private String mCenterMsg;
+    private int mChooseUnm = 12;
+    private ITLockListener mITLockListener;
+    //可设置(是否显示)
+    private boolean mShowBigCircleShader;
+    private boolean mShowSmallCircle;
+    private boolean mShowNum;
+    private boolean mShowMsg;
+    private boolean mShowPoint;
+    private boolean mShowArc;
+    //可设置(样式)
+    private float mRadius;
+    //大圆相关
+    private int mShader1;
+    private int mShader2;
+    private int mBigCircleColor;
+    private float mBigCircleWidth;
+    //小圆相关
+    private int mSmallCircleColor;
+    private float mSmallCircleRadius;
+    //时钟点相关
+    private int mPointColor;
+    private int mPointChooseColor;
+    private float mPointRadius;
     private float mPointChooseRadius;
+    private float mPointRatio;
+    //圆弧相关
+    private int mArcColor;
+    private float mArcWidth;
+    //时钟数字相关
+    private float mNumSize;
+    private float mNumChooseSize;
+    private int mNumColor;
+    private int mNumChooseColor;
+    private float mNumRatio;
+    //中间文本信息相关
+    private float mMsgSize;
+    private int mMsgColor;
 
     public TClock(Context context) {
         this(context, null);
@@ -88,24 +95,6 @@ public class TClock extends View {
         mArcPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mNumPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mMsgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    }
-
-
-    public void setITLockListener(ITLockListener ITLockListener) {
-        mITLockListener = ITLockListener;
-    }
-
-    public String getCenterMsg() {
-        return mCenterMsg;
-    }
-
-    public void setCenterMsg(String centerMsg) {
-        mCenterMsg = centerMsg;
-        if (Looper.getMainLooper() == Looper.myLooper()) {
-            invalidate();
-        } else {
-            postInvalidate();
-        }
     }
 
 
@@ -138,7 +127,7 @@ public class TClock extends View {
 
     private void initPointCircleAttr(TypedArray typedArray) {
         mPointRadius = typedArray.getDimension(R.styleable.TClock_point_radius, DensityUtil.dp2px(mContext, 2));
-        mPointChooseRadius = typedArray.getDimension(R.styleable.TClock_point_radius_choose,  DensityUtil.dp2px(mContext, 3));
+        mPointChooseRadius = typedArray.getDimension(R.styleable.TClock_point_radius_choose, DensityUtil.dp2px(mContext, 3));
         mPointColor = typedArray.getColor(R.styleable.TClock_point_color, 0xff074591);
         mPointChooseColor = typedArray.getColor(R.styleable.TClock_point_color_choose, 0xffAEEEEE);
         mPointRatio = typedArray.getFloat(R.styleable.TClock_point_radius_ratio, (float) 0.88);
@@ -157,6 +146,7 @@ public class TClock extends View {
         mNumColor = typedArray.getColor(R.styleable.TClock_num_color, 0xff074591);
         mNumChooseColor = typedArray.getColor(R.styleable.TClock_num_color_choose, 0xffaeeeee);
         mNumRatio = typedArray.getFloat(R.styleable.TClock_num_radius_ratio, (float) 0.72);
+        mShowNum = typedArray.getBoolean(R.styleable.TClock_num_show, true);
     }
 
     private void initMsgAttr(TypedArray typedArray) {
@@ -200,14 +190,22 @@ public class TClock extends View {
                 mNumPaint.setColor(mNumChooseColor);
                 mNumPaint.setTextSize(mNumChooseSize);
                 mPointPaint.setColor(mPointChooseColor);
-                canvas.drawText(number, (float) (mCx - measureText / 2 + mRadius * mNumRatio * cos), (float) (mCy + height / 3.5 - mRadius * mNumRatio * sin), mNumPaint);
-                canvas.drawCircle((float) (mCx + mRadius * mPointRatio * cos), (float) (mCy - mRadius * mPointRatio * sin), mPointChooseRadius, mPointPaint);
+                if (mShowNum) {
+                    canvas.drawText(number, (float) (mCx - measureText / 2 + mRadius * mNumRatio * cos), (float) (mCy + height / 3.5 - mRadius * mNumRatio * sin), mNumPaint);
+                }
+                if (mShowPoint) {
+                    canvas.drawCircle((float) (mCx + mRadius * mPointRatio * cos), (float) (mCy - mRadius * mPointRatio * sin), mPointChooseRadius, mPointPaint);
+                }
             } else {
                 mNumPaint.setColor(mNumColor);
                 mNumPaint.setTextSize(mNumSize);
                 mPointPaint.setColor(mPointColor);
-                canvas.drawText(number, (float) (mCx - measureText / 2 + mRadius * mNumRatio * cos), (float) (mCy + height / 3.5 - mRadius * mNumRatio * sin), mNumPaint);
-                canvas.drawCircle((float) (mCx + mRadius * mPointRatio * cos), (float) (mCy - mRadius * mPointRatio * sin), mPointRadius, mPointPaint);
+                if (mShowNum) {
+                    canvas.drawText(number, (float) (mCx - measureText / 2 + mRadius * mNumRatio * cos), (float) (mCy + height / 3.5 - mRadius * mNumRatio * sin), mNumPaint);
+                }
+                if (mShowPoint) {
+                    canvas.drawCircle((float) (mCx + mRadius * mPointRatio * cos), (float) (mCy - mRadius * mPointRatio * sin), mPointRadius, mPointPaint);
+                }
 
             }
         }
@@ -218,7 +216,9 @@ public class TClock extends View {
         mArcPaint.setStrokeWidth(mArcWidth);
         mArcPaint.setStyle(Paint.Style.STROKE);
         mArcPaint.setStrokeCap(Paint.Cap.ROUND);
-        canvas.drawArc(new RectF(mCx - radius, mCy - radius, mCx + radius, mCy + radius), mAngle - 11 - 90, 22, false, mArcPaint);
+        if (mShowArc) {
+            canvas.drawArc(new RectF(mCx - radius, mCy - radius, mCx + radius, mCy + radius), mAngle - 11 - 90, 22, false, mArcPaint);
+        }
         canvas.save();
     }
 
@@ -226,7 +226,9 @@ public class TClock extends View {
         mSmallCirclePaint.setColor(mSmallCircleColor);
         mSmallCirclePaint.setStyle(Paint.Style.FILL);
         canvas.rotate(mAngle, mCx, mCy);
-        canvas.drawCircle(mCx, mCy - mRadius, mSmallCircleRadius, mSmallCirclePaint);
+        if (mShowSmallCircle) {
+            canvas.drawCircle(mCx, mCy - mRadius, mSmallCircleRadius, mSmallCirclePaint);
+        }
         canvas.rotate(mAngle, mCx, mCy);
         canvas.save();
 
@@ -254,7 +256,9 @@ public class TClock extends View {
         float measureNumber = mMsgPaint.measureText(mCenterMsg);
         Paint.FontMetricsInt fontMetricsInt = mMsgPaint.getFontMetricsInt();
         int textHeight = fontMetricsInt.bottom - fontMetricsInt.top;
-        canvas.drawText(mCenterMsg, mCx - measureNumber / 2, (float) (mCy + textHeight / 3.5), mMsgPaint);
+        if (mShowMsg) {
+            canvas.drawText(mCenterMsg, mCx - measureNumber / 2, (float) (mCy + textHeight / 3.5), mMsgPaint);
+        }
         canvas.save();
     }
 
@@ -293,7 +297,7 @@ public class TClock extends View {
                     break;
                 case MotionEvent.ACTION_UP:
                     if (mITLockListener != null) {
-                        mITLockListener.onTClockTouch(mChooseUnm);
+                        mITLockListener.onTClockTouchUp(mChooseUnm);
                     }
                     break;
             }
@@ -303,7 +307,154 @@ public class TClock extends View {
 
     }
 
+    //------------------------松手时钟点监听-----------------------------------
     public interface ITLockListener {
-        void onTClockTouch(int clockNum);
+        void onTClockTouchUp(int clockNum);
+    }
+
+    public void setITLockListener(ITLockListener ITLockListener) {
+        mITLockListener = ITLockListener;
+    }
+    //-----------------------------默认选中值设置以及获取--------------------------------------
+
+    public void setChooseUnm(int chooseUnm) {
+        if (1 <= chooseUnm && chooseUnm <= 12) {
+            mChooseUnm = chooseUnm;
+            if (Looper.getMainLooper() == Looper.myLooper()) {
+                invalidate();
+            } else {
+                postInvalidate();
+            }
+        }
+    }
+
+    public int getChooseUnm() {
+        return mChooseUnm;
+    }
+
+    //------------------------------中心内容Msg设置和获取-------------------------------------
+    public void setCenterMsg(String centerMsg) {
+        mCenterMsg = centerMsg;
+        if (Looper.getMainLooper() == Looper.myLooper()) {
+            invalidate();
+        } else {
+            postInvalidate();
+        }
+    }
+
+    public String getCenterMsg() {
+        return mCenterMsg;
+    }
+    //-----------------------------显示设置----------------------------------------
+
+    public void setShowBigCircleShader(boolean showBigCircleShader) {
+        mShowBigCircleShader = showBigCircleShader;
+    }
+
+    public void setShowSmallCircle(boolean showSmallCircle) {
+        mShowSmallCircle = showSmallCircle;
+    }
+
+    public void setShowNum(boolean showNum) {
+        mShowNum = showNum;
+    }
+
+    public void setShowMsg(boolean showMsg) {
+        mShowMsg = showMsg;
+    }
+
+    public void setShowPoint(boolean showPoint) {
+        mShowPoint = showPoint;
+    }
+
+    public void setShowArc(boolean showArc) {
+        mShowArc = showArc;
+    }
+
+    //-----------------------样式设置----------------------------------------------------
+
+
+    public void setRadius(float radius) {
+        mRadius = radius;
+    }
+
+    public void setShader1(int shader1) {
+        mShader1 = shader1;
+    }
+
+    public void setShader2(int shader2) {
+        mShader2 = shader2;
+    }
+
+    public void setBigCircleColor(int bigCircleColor) {
+        mBigCircleColor = bigCircleColor;
+    }
+
+    public void setBigCircleWidth(float bigCircleWidth) {
+        mBigCircleWidth = bigCircleWidth;
+    }
+
+    public void setSmallCircleColor(int smallCircleColor) {
+        mSmallCircleColor = smallCircleColor;
+    }
+
+    public void setSmallCircleRadius(float smallCircleRadius) {
+        mSmallCircleRadius = smallCircleRadius;
+    }
+
+    public void setPointColor(int pointColor) {
+        mPointColor = pointColor;
+    }
+
+    public void setPointChooseColor(int pointChooseColor) {
+        mPointChooseColor = pointChooseColor;
+    }
+
+    public void setPointRadius(float pointRadius) {
+        mPointRadius = pointRadius;
+    }
+
+    public void setPointChooseRadius(float pointChooseRadius) {
+        mPointChooseRadius = pointChooseRadius;
+    }
+
+    public void setPointRatio(float pointRatio) {
+        mPointRatio = pointRatio;
+    }
+
+    public void setArcColor(int arcColor) {
+        mArcColor = arcColor;
+    }
+
+    public void setArcWidth(float arcWidth) {
+        mArcWidth = arcWidth;
+    }
+
+    public void setNumSize(float numSize) {
+        mNumSize = numSize;
+    }
+
+    public void setNumChooseSize(float numChooseSize) {
+        mNumChooseSize = numChooseSize;
+    }
+
+    public void setNumColor(int numColor) {
+        mNumColor = numColor;
+    }
+
+    public void setNumChooseColor(int numChooseColor) {
+        mNumChooseColor = numChooseColor;
+    }
+
+    public void setNumRatio(float numRatio) {
+        mNumRatio = numRatio;
+    }
+
+    public void setMsgSize(float msgSize) {
+        mMsgSize = msgSize;
+    }
+
+    public void setMsgColor(int msgColor) {
+        mMsgColor = msgColor;
     }
 }

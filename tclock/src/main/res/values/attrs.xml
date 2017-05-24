@@ -24,6 +24,10 @@
         <attr name="arc_color" format="color"/>
         <attr name="arc_width" format="dimension"/>
         <attr name="arc_show" format="boolean"/>
+        <!--中间字体大小、颜色、是否显示-->
+        <attr name="center_msg_Size" format="dimension"/>
+        <attr name="center_msg_Color" format="color"/>
+        <attr name="center_msg_show" format="boolean"/>
         <!--时钟数字大小、颜色、被选中时大小、被选中时颜色、到圆心的距离(按半径百分比)、是否显示-->
         <attr name="num_radius" format="dimension"/>
         <attr name="num_color" format="color"/>
@@ -31,10 +35,6 @@
         <attr name="num_color_choose" format="color"/>
         <attr name="num_radius_ratio" format="float"/>
         <attr name="num_show" format="boolean"/>
-        <!--中间字体大小、颜色、是否显示-->
-        <attr name="center_msg_Size" format="dimension"/>
-        <attr name="center_msg_Color" format="color"/>
-        <attr name="center_msg_show" format="boolean"/>
 
     </declare-styleable>
 </resources>
