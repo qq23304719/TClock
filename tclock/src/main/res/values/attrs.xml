@@ -14,20 +14,20 @@
         <attr name="small_circle_radius" format="dimension"/>
         <attr name="small_circle_show" format="boolean"/>
         <!--时钟点大小、颜色、是否显示、被选中时大小、被选中时颜色、到圆心的距离(按半径百分比)-->
-        <attr name="point_size" format="dimension"/>
+        <attr name="point_radius" format="dimension"/>
         <attr name="point_color" format="color"/>
-        <attr name="point_size_choose" format="dimension"/>
+        <attr name="point_radius_choose" format="dimension"/>
         <attr name="point_color_choose" format="color"/>
         <attr name="point_radius_ratio" format="float"/>
         <attr name="point_show" format="boolean"/>
         <!--圆弧颜色、宽度、是否显示-->
         <attr name="arc_color" format="color"/>
-        <attr name="arc_width" format="boolean"/>
+        <attr name="arc_width" format="dimension"/>
         <attr name="arc_show" format="boolean"/>
         <!--时钟数字大小、颜色、被选中时大小、被选中时颜色、到圆心的距离(按半径百分比)、是否显示-->
-        <attr name="num_size" format="dimension"/>
+        <attr name="num_radius" format="dimension"/>
         <attr name="num_color" format="color"/>
-        <attr name="num_size_choose" format="dimension"/>
+        <attr name="num_radius_choose" format="dimension"/>
         <attr name="num_color_choose" format="color"/>
         <attr name="num_radius_ratio" format="float"/>
         <attr name="num_show" format="boolean"/>

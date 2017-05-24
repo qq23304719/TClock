@@ -3,7 +3,6 @@ package com.jkt.tclock;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.RectF;
@@ -20,16 +19,15 @@ import android.view.View;
  */
 public class TClock extends View {
     private Context mContext;
+    private ITLockListener mITLockListener;
     private String mCenterMsg;
-    private int mChooseUnm;
-    private Paint mPaint;
+    private int mChooseUnm=12;
     private int mAngle;
     private float oldX;
     private float oldY;
     private int mCx;
     private int mCy;
     private float mRadius;
-    private ITLockListener mITLockListener;
     private int mShader1;
     private int mShader2;
     private boolean mShowBigCircleShader;
@@ -42,15 +40,15 @@ public class TClock extends View {
     private float mSmallCircleRadius;
     private int mPointChooseColor;
     private int mPointColor;
-    private float mPointSize;
-    private float mPointchooseSize;
+    private float mPointRadius;
+    private float mPointchooseRadiusSize;
     private boolean mShowPoint;
     private Paint mPoint1CirclePaint;
     private int mSmallCircleColor;
     private float mBigCircleWidth;
     private int mBigCircleColor;
     private int mArcColor;
-    private int mArcWidth;
+    private float mArcWidth;
     private boolean mShowArc;
     private float mPointRatio;
     private float mNumSize;
@@ -63,6 +61,8 @@ public class TClock extends View {
     private Paint mArcPaint;
     private Paint mNumPaint;
     private Paint mMsgPaint;
+    private float mNumChooseSize;
+    private float mPointChooseRadius;
 
     public TClock(Context context) {
         this(context, null);
@@ -123,7 +123,7 @@ public class TClock extends View {
 
     private void initBigCircleAttr(TypedArray typedArray) {
         mBigCircleColor = typedArray.getColor(R.styleable.TClock_big_circle_color, 0xff4169E1);
-        mBigCircleWidth = typedArray.getDimension(R.styleable.TClock_big_circle_width, 8);
+        mBigCircleWidth = typedArray.getDimension(R.styleable.TClock_big_circle_width, DensityUtil.dp2px(mContext, 8));
         mShader1 = typedArray.getColor(R.styleable.TClock_big_circle_shader1, 0xff4169E1);
         mShader2 = typedArray.getColor(R.styleable.TClock_big_circle_shader2, 0xff87CEFA);
         mShowBigCircleShader = typedArray.getBoolean(R.styleable.TClock_big_circle_shader_show, true);
@@ -131,37 +131,37 @@ public class TClock extends View {
     }
 
     private void initSmallCircleAttr(TypedArray typedArray) {
-        mSmallCircleColor = typedArray.getColor(R.styleable.TClock_small_circle_color, 0xff4169E1);
-        mSmallCircleRadius = typedArray.getDimension(R.styleable.TClock_small_circle_radius, 8);
+        mSmallCircleColor = typedArray.getColor(R.styleable.TClock_small_circle_color, 0xffFFFFFF);
+        mSmallCircleRadius = typedArray.getDimension(R.styleable.TClock_small_circle_radius, DensityUtil.dp2px(mContext, 8));
         mShowSmallCircle = typedArray.getBoolean(R.styleable.TClock_small_circle_show, true);
     }
 
     private void initPointCircleAttr(TypedArray typedArray) {
-        mPointchooseSize = typedArray.getDimension(R.styleable.TClock_point_size_choose, 8);
-        mPointSize = typedArray.getDimension(R.styleable.TClock_point_size, 8);
-        mPointChooseColor = typedArray.getColor(R.styleable.TClock_point_color_choose, 0xffAEEEEE);
+        mPointRadius = typedArray.getDimension(R.styleable.TClock_point_radius, DensityUtil.dp2px(mContext, 2));
+        mPointChooseRadius = typedArray.getDimension(R.styleable.TClock_point_radius_choose,  DensityUtil.dp2px(mContext, 3));
         mPointColor = typedArray.getColor(R.styleable.TClock_point_color, 0xff074591);
-        mPointRatio = typedArray.getFloat(R.styleable.TClock_point_radius_ratio, (float) 0.85);
+        mPointChooseColor = typedArray.getColor(R.styleable.TClock_point_color_choose, 0xffAEEEEE);
+        mPointRatio = typedArray.getFloat(R.styleable.TClock_point_radius_ratio, (float) 0.88);
         mShowPoint = typedArray.getBoolean(R.styleable.TClock_point_show, true);
     }
 
     private void initArcAttr(TypedArray typedArray) {
         mArcColor = typedArray.getColor(R.styleable.TClock_arc_color, 0xffAEEEEE);
-        mArcWidth = typedArray.getInteger(R.styleable.TClock_arc_width, 8);
+        mArcWidth = typedArray.getDimension(R.styleable.TClock_arc_width, DensityUtil.dp2px(mContext, 8));
         mShowArc = typedArray.getBoolean(R.styleable.TClock_arc_show, true);
     }
 
     private void initNumAttr(TypedArray typedArray) {
-        mNumSize = typedArray.getDimension(R.styleable.TClock_num_size, DensityUtil.dp2px(mContext, 13));
-        mNumSize = typedArray.getDimension(R.styleable.TClock_num_size_choose, DensityUtil.dp2px(mContext, 16));
+        mNumSize = typedArray.getDimension(R.styleable.TClock_num_radius, DensityUtil.sp2px(mContext, 13));
+        mNumChooseSize = typedArray.getDimension(R.styleable.TClock_num_radius_choose, DensityUtil.sp2px(mContext, 16));
         mNumColor = typedArray.getColor(R.styleable.TClock_num_color, 0xff074591);
         mNumChooseColor = typedArray.getColor(R.styleable.TClock_num_color_choose, 0xffaeeeee);
-        mNumRatio = typedArray.getFloat(R.styleable.TClock_num_radius_ratio, (float) 0.75);
+        mNumRatio = typedArray.getFloat(R.styleable.TClock_num_radius_ratio, (float) 0.72);
     }
 
     private void initMsgAttr(TypedArray typedArray) {
         mMsgColor = typedArray.getColor(R.styleable.TClock_center_msg_Color, 0xff074591);
-        mMsgSize = typedArray.getDimension(R.styleable.TClock_center_msg_Size, DensityUtil.dp2px(mContext, 19));
+        mMsgSize = typedArray.getDimension(R.styleable.TClock_center_msg_Size, DensityUtil.sp2px(mContext, 19));
         mShowMsg = typedArray.getBoolean(R.styleable.TClock_center_msg_show, true);
     }
 
@@ -174,41 +174,40 @@ public class TClock extends View {
         mRadius = mRadius == 0 ? (float) (Math.min(getWidth(), getHeight()) / 2.4) : mRadius;
         //画大圆
         drawBigCircle(canvas, mRadius);
-        //画大圆边环上面的小圆
-        drawSmallCircle(canvas, mRadius);
         //画时钟时间数字和圆点
-        drawNumberAndPoint(canvas, mRadius);
+        drawNumberAndPoint(canvas);
         //画圆弧
         drawArc(canvas, mRadius);
         //中间消息文本
         drawMsg(canvas, mRadius);
+        //画大圆边环上面的小圆
+        drawSmallCircle(canvas);
 
     }
 
-    private void drawNumberAndPoint(Canvas canvas, float radius) {
-        float textSize = DensityUtil.dp2px(mContext, 13);
-        mPaint.setTextSize(textSize);
-        mPaint.setStyle(Paint.Style.FILL);
-        int color = 0xff074591;
-        int timeChooseColor = Color.rgb(0xAE, 0xEE, 0xEE);
-        mPaint.setColor(color);
+    private void drawNumberAndPoint(Canvas canvas) {
+        mNumPaint.setTextSize(mNumSize);
+        mNumPaint.setStyle(Paint.Style.FILL);
+        mPointPaint.setStyle(Paint.Style.FILL);
         for (int i = 1; i <= 12; i++) {
             String number = String.valueOf(i);
             double sin = Math.sin(Math.toRadians(60 - (i - 1) * 30));
             double cos = Math.cos(Math.toRadians(60 - (i - 1) * 30));
-            float measureText = mPaint.measureText(number);
-            Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();
+            float measureText = mNumPaint.measureText(number);
+            Paint.FontMetrics fontMetrics = mNumPaint.getFontMetrics();
             float height = fontMetrics.bottom - fontMetrics.top;
             if (i == mChooseUnm) {
-                mPaint.setColor(timeChooseColor);
-                mPaint.setTextSize((float) (textSize * 1.2));
-                canvas.drawText(number, (float) (mCx - measureText / 2 + radius * 5.2f / 7 * cos), (float) (mCy + height / 3.5 - radius * 5.2f / 7 * sin), mPaint);
-                canvas.drawCircle((float) (mCx + radius * 6.15f / 7 * cos), (float) (mCy - radius * 6.15f / 7 * sin), (float) 8.5, mPaint);
+                mNumPaint.setColor(mNumChooseColor);
+                mNumPaint.setTextSize(mNumChooseSize);
+                mPointPaint.setColor(mPointChooseColor);
+                canvas.drawText(number, (float) (mCx - measureText / 2 + mRadius * mNumRatio * cos), (float) (mCy + height / 3.5 - mRadius * mNumRatio * sin), mNumPaint);
+                canvas.drawCircle((float) (mCx + mRadius * mPointRatio * cos), (float) (mCy - mRadius * mPointRatio * sin), mPointChooseRadius, mPointPaint);
             } else {
-                mPaint.setTextSize((float) (textSize));
-                mPaint.setColor(color);
-                canvas.drawText(number, (float) (mCx - measureText / 2 + radius * 5.2f / 7 * cos), (float) (mCy + height / 3.5 - radius * 5.2f / 7 * sin), mPaint);
-                canvas.drawCircle((float) (mCx + radius * 6.15f / 7 * cos), (float) (mCy - radius * 6.15f / 7 * sin), 6, mPaint);
+                mNumPaint.setColor(mNumColor);
+                mNumPaint.setTextSize(mNumSize);
+                mPointPaint.setColor(mPointColor);
+                canvas.drawText(number, (float) (mCx - measureText / 2 + mRadius * mNumRatio * cos), (float) (mCy + height / 3.5 - mRadius * mNumRatio * sin), mNumPaint);
+                canvas.drawCircle((float) (mCx + mRadius * mPointRatio * cos), (float) (mCy - mRadius * mPointRatio * sin), mPointRadius, mPointPaint);
 
             }
         }
@@ -219,16 +218,18 @@ public class TClock extends View {
         mArcPaint.setStrokeWidth(mArcWidth);
         mArcPaint.setStyle(Paint.Style.STROKE);
         mArcPaint.setStrokeCap(Paint.Cap.ROUND);
-        canvas.drawArc(new RectF(mCx - radius, mCy - radius, mCx + radius, mCy + radius), mAngle - 11 - 90, 22, false, mPaint);
+        canvas.drawArc(new RectF(mCx - radius, mCy - radius, mCx + radius, mCy + radius), mAngle - 11 - 90, 22, false, mArcPaint);
         canvas.save();
     }
 
-    private void drawSmallCircle(Canvas canvas, float radius) {
+    private void drawSmallCircle(Canvas canvas) {
         mSmallCirclePaint.setColor(mSmallCircleColor);
         mSmallCirclePaint.setStyle(Paint.Style.FILL);
-        canvas.drawCircle(mCx, mCy - radius, DensityUtil.dp2px(mContext, 8), mSmallCirclePaint);
+        canvas.rotate(mAngle, mCx, mCy);
+        canvas.drawCircle(mCx, mCy - mRadius, mSmallCircleRadius, mSmallCirclePaint);
         canvas.rotate(mAngle, mCx, mCy);
         canvas.save();
+
     }
 
     private void drawBigCircle(Canvas canvas, float radius) {
@@ -250,8 +251,8 @@ public class TClock extends View {
         if (TextUtils.isEmpty(mCenterMsg) || !mShowMsg) {
             return;
         }
-        float measureNumber = mPaint.measureText(mCenterMsg);
-        Paint.FontMetricsInt fontMetricsInt = mPaint.getFontMetricsInt();
+        float measureNumber = mMsgPaint.measureText(mCenterMsg);
+        Paint.FontMetricsInt fontMetricsInt = mMsgPaint.getFontMetricsInt();
         int textHeight = fontMetricsInt.bottom - fontMetricsInt.top;
         canvas.drawText(mCenterMsg, mCx - measureNumber / 2, (float) (mCy + textHeight / 3.5), mMsgPaint);
         canvas.save();
