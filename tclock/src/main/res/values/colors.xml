@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bigCircleColor">#ff4169E1</color>
+    <color name="shader1">#ff4169E1</color>
+    <color name="shader2">#ff87CEFA</color>
+    <color name="smallCircleColor">#ffFFFFFF</color>
+    <color name="pointColor">#ff074591</color>
+    <color name="pointChooseColor">#ffAEEEEE</color>
+    <color name="arcColor">#ffAEEEEE</color>
+    <color name="numColor">#ff074591</color>
+    <color name="numChooseColor">#ffaeeeee</color>
+    <color name="msgColor">#ff074591</color>
+
+</resources>

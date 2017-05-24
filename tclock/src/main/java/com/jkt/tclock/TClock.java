@@ -86,6 +86,7 @@ public class TClock extends View {
                 R.styleable.TClock, defStyleAttr, 0);
         initAttr(typedArray);
         initPaint();
+        typedArray.recycle();
     }
 
     private void initPaint() {
@@ -111,16 +112,16 @@ public class TClock extends View {
 
 
     private void initBigCircleAttr(TypedArray typedArray) {
-        mBigCircleColor = typedArray.getColor(R.styleable.TClock_big_circle_color, 0xff4169E1);
+        mBigCircleColor = typedArray.getColor(R.styleable.TClock_big_circle_color, mContext.getResources().getColor(R.color.bigCircleColor));
         mBigCircleWidth = typedArray.getDimension(R.styleable.TClock_big_circle_width, DensityUtil.dp2px(mContext, 8));
-        mShader1 = typedArray.getColor(R.styleable.TClock_big_circle_shader1, 0xff4169E1);
-        mShader2 = typedArray.getColor(R.styleable.TClock_big_circle_shader2, 0xff87CEFA);
+        mShader1 = typedArray.getColor(R.styleable.TClock_big_circle_shader1, mContext.getResources().getColor(R.color.shader1));
+        mShader2 = typedArray.getColor(R.styleable.TClock_big_circle_shader2, mContext.getResources().getColor(R.color.shader2));
         mShowBigCircleShader = typedArray.getBoolean(R.styleable.TClock_big_circle_shader_show, true);
 
     }
 
     private void initSmallCircleAttr(TypedArray typedArray) {
-        mSmallCircleColor = typedArray.getColor(R.styleable.TClock_small_circle_color, 0xffFFFFFF);
+        mSmallCircleColor = typedArray.getColor(R.styleable.TClock_small_circle_color, mContext.getResources().getColor(R.color.smallCircleColor));
         mSmallCircleRadius = typedArray.getDimension(R.styleable.TClock_small_circle_radius, DensityUtil.dp2px(mContext, 8));
         mShowSmallCircle = typedArray.getBoolean(R.styleable.TClock_small_circle_show, true);
     }
@@ -128,14 +129,14 @@ public class TClock extends View {
     private void initPointCircleAttr(TypedArray typedArray) {
         mPointRadius = typedArray.getDimension(R.styleable.TClock_point_radius, DensityUtil.dp2px(mContext, 2));
         mPointChooseRadius = typedArray.getDimension(R.styleable.TClock_point_radius_choose, DensityUtil.dp2px(mContext, 3));
-        mPointColor = typedArray.getColor(R.styleable.TClock_point_color, 0xff074591);
-        mPointChooseColor = typedArray.getColor(R.styleable.TClock_point_color_choose, 0xffAEEEEE);
+        mPointColor = typedArray.getColor(R.styleable.TClock_point_color, mContext.getResources().getColor(R.color.pointColor));
+        mPointChooseColor = typedArray.getColor(R.styleable.TClock_point_color_choose, mContext.getResources().getColor(R.color.pointChooseColor));
         mPointRatio = typedArray.getFloat(R.styleable.TClock_point_radius_ratio, (float) 0.88);
         mShowPoint = typedArray.getBoolean(R.styleable.TClock_point_show, true);
     }
 
     private void initArcAttr(TypedArray typedArray) {
-        mArcColor = typedArray.getColor(R.styleable.TClock_arc_color, 0xffAEEEEE);
+        mArcColor = typedArray.getColor(R.styleable.TClock_arc_color, mContext.getResources().getColor(R.color.pointChooseColor));
         mArcWidth = typedArray.getDimension(R.styleable.TClock_arc_width, DensityUtil.dp2px(mContext, 8));
         mShowArc = typedArray.getBoolean(R.styleable.TClock_arc_show, true);
     }
@@ -143,14 +144,14 @@ public class TClock extends View {
     private void initNumAttr(TypedArray typedArray) {
         mNumSize = typedArray.getDimension(R.styleable.TClock_num_radius, DensityUtil.sp2px(mContext, 13));
         mNumChooseSize = typedArray.getDimension(R.styleable.TClock_num_radius_choose, DensityUtil.sp2px(mContext, 16));
-        mNumColor = typedArray.getColor(R.styleable.TClock_num_color, 0xff074591);
-        mNumChooseColor = typedArray.getColor(R.styleable.TClock_num_color_choose, 0xffaeeeee);
+        mNumColor = typedArray.getColor(R.styleable.TClock_num_color, mContext.getResources().getColor(R.color.numColor));
+        mNumChooseColor = typedArray.getColor(R.styleable.TClock_num_color_choose, mContext.getResources().getColor(R.color.numChooseColor));
         mNumRatio = typedArray.getFloat(R.styleable.TClock_num_radius_ratio, (float) 0.72);
         mShowNum = typedArray.getBoolean(R.styleable.TClock_num_show, true);
     }
 
     private void initMsgAttr(TypedArray typedArray) {
-        mMsgColor = typedArray.getColor(R.styleable.TClock_center_msg_Color, 0xff074591);
+        mMsgColor = typedArray.getColor(R.styleable.TClock_center_msg_Color, mContext.getResources().getColor(R.color.msgColor));
         mMsgSize = typedArray.getDimension(R.styleable.TClock_center_msg_Size, DensityUtil.sp2px(mContext, 19));
         mShowMsg = typedArray.getBoolean(R.styleable.TClock_center_msg_show, true);
     }
@@ -247,17 +248,20 @@ public class TClock extends View {
     }
 
     private void drawMsg(Canvas canvas, float radius) {
+        String msg = null;
         mMsgPaint.setTextSize(mMsgSize);
         mMsgPaint.setColor(mMsgColor);
         mMsgPaint.setStyle(Paint.Style.FILL);
-        if (TextUtils.isEmpty(mCenterMsg) || !mShowMsg) {
-            return;
+        if (TextUtils.isEmpty(mCenterMsg)) {
+            msg = mChooseUnm + "";
+        } else {
+            msg = mCenterMsg;
         }
-        float measureNumber = mMsgPaint.measureText(mCenterMsg);
+        float measureNumber = mMsgPaint.measureText(msg);
         Paint.FontMetricsInt fontMetricsInt = mMsgPaint.getFontMetricsInt();
         int textHeight = fontMetricsInt.bottom - fontMetricsInt.top;
         if (mShowMsg) {
-            canvas.drawText(mCenterMsg, mCx - measureNumber / 2, (float) (mCy + textHeight / 3.5), mMsgPaint);
+            canvas.drawText(msg, mCx - measureNumber / 2, (float) (mCy + textHeight / 3.5), mMsgPaint);
         }
         canvas.save();
     }
@@ -312,7 +316,7 @@ public class TClock extends View {
         void onTClockTouchUp(int clockNum);
     }
 
-    public void setITLockListener(ITLockListener ITLockListener) {
+    public void setOnTLockListener(ITLockListener ITLockListener) {
         mITLockListener = ITLockListener;
     }
     //-----------------------------默认选中值设置以及获取--------------------------------------
@@ -320,6 +324,7 @@ public class TClock extends View {
     public void setChooseUnm(int chooseUnm) {
         if (1 <= chooseUnm && chooseUnm <= 12) {
             mChooseUnm = chooseUnm;
+            mAngle = 30 * mChooseUnm;
             if (Looper.getMainLooper() == Looper.myLooper()) {
                 invalidate();
             } else {
@@ -453,8 +458,7 @@ public class TClock extends View {
     public void setMsgSize(float msgSize) {
         mMsgSize = msgSize;
     }
-
-    public void setMsgColor(int msgColor) {
+    public void setMsgColor( int msgColor) {
         mMsgColor = msgColor;
     }
 }

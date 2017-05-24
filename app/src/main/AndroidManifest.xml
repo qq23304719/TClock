@@ -15,6 +15,28 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".itemactivities.ShowAllActivity">
+        </activity>
+        <activity android:name=".itemactivities.NoSmallCircleActivity">
+        </activity>
+        <activity android:name=".itemactivities.NoArcActivity">
+        </activity>
+        <activity android:name=".itemactivities.NoShaderActivity">
+        </activity>
+        <activity android:name=".itemactivities.NoMsgActivity">
+        </activity>
+        <activity android:name=".itemactivities.NoNumActivity">
+        </activity>
+        <activity android:name=".itemactivities.NoPointActivity">
+        </activity>
+        <activity android:name=".itemactivities.CustomColorActivity">
+        </activity>
+        <activity android:name=".itemactivities.CustomSizeActivity">
+        </activity>
+        <activity android:name=".itemactivities.BaseDataActivity">
+        </activity>
+        <activity android:name=".itemactivities.CustomMsgActivity">
+        </activity>
     </application>
 
 </manifest>

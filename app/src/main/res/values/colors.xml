@@ -7,6 +7,8 @@
     <color name="colorOrangne">#ebb839</color>
     <color name="colorGray">#CDC9C9</color>
     <color name="colorPurple">#9B30FF</color>
+    <color name="colorWhite">#ffffff</color>
+    <color name="colorDark">#000000</color>
 
 
 </resources>
